@@ -5,106 +5,105 @@
   <title>Assistente de Criação de Conteúdo com Inteligência Artificial AGILLE AI</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
- <style>
-  body {
-    font-family: Arial, sans-serif;
-    background: #f4f6f8;
-    margin: 0;
-    padding: 0;
-  }
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #f4f6f8;
+      margin: 0;
+      padding: 0;
+    }
 
-  .container {
-    max-width: 800px;
-    margin: 40px auto;
-    background: #ffffff;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    border-top: 6px solid rgb(0, 72, 18);
-  }
+    .container {
+      max-width: 800px;
+      margin: 40px auto;
+      background: #ffffff;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      border-top: 6px solid rgb(0, 72, 18);
+    }
 
-  h1 {
-    margin-top: 0;
-    font-size: 22px;
-    color: rgb(0, 72, 18);
-  }
+    h1 {
+      margin-top: 0;
+      font-size: 22px;
+      color: rgb(0, 72, 18);
+    }
 
-  .chat-box {
-    border: 1px solid #ddd;
-    padding: 10px;
-    height: 350px;
-    overflow-y: auto;
-    margin-bottom: 10px;
-    background: #fafafa;
-  }
+    .chat-box {
+      border: 1px solid #ddd;
+      padding: 10px;
+      height: 350px;
+      overflow-y: auto;
+      margin-bottom: 10px;
+      background: #fafafa;
+    }
 
-  .message {
-    margin-bottom: 10px;
-    line-height: 1.4;
-  }
+    .message {
+      margin-bottom: 10px;
+      line-height: 1.4;
+    }
 
-  .user {
-    font-weight: bold;
-    color: rgb(0, 72, 18);
-  }
+    .user {
+      font-weight: bold;
+      color: rgb(0, 72, 18);
+    }
 
-  .assistant {
-    color: rgb(109, 179, 63);
-  }
+    .assistant {
+      color: rgb(109, 179, 63);
+    }
 
-  textarea {
-    width: 100%;
-    height: 70px;
-    padding: 8px;
-    font-size: 14px;
-    border-radius: 4px;
-    border: 1px solid #ccc;
-  }
+    textarea {
+      width: 100%;
+      height: 70px;
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
 
-  textarea:focus {
-    outline: none;
-    border-color: rgb(109, 179, 63);
-    box-shadow: 0 0 0 2px rgba(109, 179, 63, 0.2);
-  }
+    textarea:focus {
+      outline: none;
+      border-color: rgb(109, 179, 63);
+      box-shadow: 0 0 0 2px rgba(109, 179, 63, 0.2);
+    }
 
-  button {
-    margin-top: 10px;
-    padding: 10px 16px;
-    font-size: 14px;
-    background: rgb(0, 72, 18);
-    color: #fff;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
+    button {
+      margin-top: 10px;
+      padding: 10px 16px;
+      font-size: 14px;
+      background: rgb(0, 72, 18);
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
 
-  button:hover {
-    background: rgb(109, 179, 63);
-  }
+    button:hover {
+      background: rgb(109, 179, 63);
+    }
 
-  button:disabled {
-    background: #999;
-    cursor: not-allowed;
-  }
+    button:disabled {
+      background: #999;
+      cursor: not-allowed;
+    }
 
-  .hint {
-    font-size: 12px;
-    color: #666;
-    margin-top: 10px;
-  }
+    .hint {
+      font-size: 12px;
+      color: #666;
+      margin-top: 10px;
+    }
 
-  footer a {
-    color: rgb(0, 72, 18);
-    font-weight: bold;
-  }
-</style>
+    footer a {
+      color: rgb(0, 72, 18);
+      font-weight: bold;
+    }
+  </style>
 
 </head>
 
 <body>
   <div class="container">
      <h1>Assistente de Criação de Conteúdo com Inteligência Artificial AGILLE AI</h1>
-
 
     <div class="chat-box" id="chatBox"></div>
 
@@ -123,59 +122,49 @@
   </a>
 </footer>
 
-  
-  <script>
-    const chatBox = document.getElementById("chatBox");
-    const userInput = document.getElementById("userInput");
-    const sendBtn = document.getElementById("sendBtn");
+<script>
+  const chatBox = document.getElementById("chatBox");
+  const userInput = document.getElementById("userInput");
+  const sendBtn = document.getElementById("sendBtn");
 
-    const BACKEND_URL = "https://agille-ai-backend.onrender.com/chat";
+  const BACKEND_URL = "https://agille-ai-backend.onrender.com/chat";
 
-    function addMessage(text, sender) {
-      const div = document.createElement("div");
-      div.classList.add("message");
+  function addMessage(content, sender) {
+    const div = document.createElement("div");
+    div.classList.add("message");
 
-      if (sender === "user") {
-        div.innerHTML = `<span class="user">Você:</span> ${text}`;
+    if (sender === "user") {
+      div.innerHTML = `<span class="user">Você:</span> ${content}`;
+    } else {
+      // Se content é uma URL de imagem (exemplo: termina com .jpg/.png/.gif)
+      if (typeof content === "string" && (content.endsWith(".jpg") || content.endsWith(".png") || content.endsWith(".gif"))) {
+        div.innerHTML = `<span class="assistant">Assistente:</span><br/><img src="${content}" alt="Imagem gerada pela IA" style="max-width:100%; border-radius:4px;" />`;
       } else {
-        div.innerHTML = `<span class="assistant">Assistente:</span> ${text}`;
+        div.innerHTML = `<span class="assistant">Assistente:</span> ${content}`;
       }
-
-      chatBox.appendChild(div);
-      chatBox.scrollTop = chatBox.scrollHeight;
     }
 
-    async function sendMessage() {
-      const message = userInput.value.trim();
-      if (!message) return;
+    chatBox.appendChild(div);
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }
 
-      addMessage(message, "user");
-      userInput.value = "";
-      sendBtn.disabled = true;
+  async function sendMessage() {
+    const message = userInput.value.trim();
+    if (!message) return;
 
-      try {
-        const response = await fetch(BACKEND_URL, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ message })
-        });
+    addMessage(message, "user");
+    userInput.value = "";
+    sendBtn.disabled = true;
 
-        const data = await response.json();
-        addMessage(data.response, "assistant");
-      } catch (error) {
-        addMessage("Erro ao conectar com o assistente.", "assistant");
-      }
+    try {
+      const response = await fetch(BACKEND_URL, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message })
+      });
 
-      sendBtn.disabled = false;
-    }
+      const data = await response.json();
 
-    sendBtn.addEventListener("click", sendMessage);
-    userInput.addEventListener("keypress", function (e) {
-      if (e.key === "Enter" && !e.shiftKey) {
-        e.preventDefault();
-        sendMessage();
-      }
-    });
-  </script>
-</body>
-</html>
+      // Adiciona texto da resposta
+      addMessage(d
+
