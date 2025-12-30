@@ -136,12 +136,8 @@
     if (sender === "user") {
       div.innerHTML = `<span class="user">Você:</span> ${content}`;
     } else {
-      // Se content é uma URL de imagem (termina com extensão comum de imagem)
-      if (typeof content === "string" && (content.endsWith(".jpg") || content.endsWith(".png") || content.endsWith(".gif"))) {
-        div.innerHTML = `<span class="assistant">Assistente:</span><br/><img src="${content}" alt="Imagem gerada pela IA" style="max-width:100%; border-radius:4px;" />`;
-      } else {
-        div.innerHTML = `<span class="assistant">Assistente:</span> ${content}`;
-      }
+      // Mostrar sempre como texto (sem tentar carregar imagens)
+      div.innerHTML = `<span class="assistant">Assistente:</span> ${content}`;
     }
 
     chatBox.appendChild(div);
@@ -165,15 +161,11 @@
 
       const data = await response.json();
 
-      // Mostrar texto (se houver)
       if (data.response) {
         addMessage(data.response, "assistant");
       }
 
-      // Mostrar imagem (se houver)
-      if (data.image_url) {
-        addMessage(data.image_url, "assistant");
-      }
+      // Ignorar data.image_url pois backend não gera imagem mais
 
     } catch (error) {
       addMessage("Erro ao conectar com o assistente.", "assistant");
