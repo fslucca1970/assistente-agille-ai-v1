@@ -165,6 +165,29 @@
 
       const data = await response.json();
 
-      // Adiciona texto da resposta
-      addMessage(d
+      if (data.image_url) {
+        addMessage(data.image_url, "assistant");
+      }
+
+      if (data.response) {
+        addMessage(data.response, "assistant");
+      }
+
+    } catch (error) {
+      addMessage("Erro ao conectar com o assistente.", "assistant");
+    }
+
+    sendBtn.disabled = false;
+  }
+
+  sendBtn.addEventListener("click", sendMessage);
+  userInput.addEventListener("keypress", function (e) {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      sendMessage();
+    }
+  });
+</script>
+</body>
+</html>
 
