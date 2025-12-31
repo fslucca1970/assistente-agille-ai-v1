@@ -52,6 +52,12 @@
       color: rgb(109, 179, 63);
     }
 
+    /* >>> NOVO: estado de pensamento <<< */
+    .thinking {
+      color: #999;
+      font-style: italic;
+    }
+
     textarea, input {
       width: 100%;
       padding: 8px;
@@ -129,11 +135,7 @@
 
     <div class="chat-box" id="chatBox"></div>
 
-    <input
-      type="text"
-      id="accessCode"
-      placeholder="Código de acesso"
-    />
+    <input type="text" id="accessCode" placeholder="Código de acesso" />
 
     <textarea
       id="userInput"
@@ -147,15 +149,14 @@
     </div>
   </div>
 
-  <!-- DICAS PARA O USUÁRIO -->
   <div class="tips">
     <strong>Dicas para obter melhores resultados:</strong>
     <ul>
       <li>Descreva claramente o <strong>objetivo</strong> do texto.</li>
-      <li>Informe o <strong>público-alvo</strong> (ex.: líderes, gestores, equipes técnicas).</li>
-      <li>Defina o <strong>tom</strong> desejado (ex.: profissional, estratégico, inspirador).</li>
-      <li>Indique a <strong>rede social</strong> quando relevante.</li>
-      <li>O conteúdo será sempre direto, profissional e sem saudações iniciais.</li>
+      <li>Informe o <strong>público-alvo</strong>.</li>
+      <li>Defina o <strong>tom</strong> desejado.</li>
+      <li>Indique a <strong>rede social</strong>.</li>
+      <li>O conteúdo será sempre direto e sem saudações iniciais.</li>
     </ul>
   </div>
 
@@ -181,7 +182,7 @@
     if (sender === "user") {
       div.innerHTML = `<span class="user">Você:</span> ${content}`;
     } else {
-      div.innerHTML = `<span class="assistant">Assistente:</span> ${content}`;
+      div.innerHTML = `<span class="assistant">Assistente:</span> <span>${content}</span>`;
     }
 
     chatBox.appendChild(div);
@@ -206,15 +207,13 @@
     sendBtn.disabled = true;
 
     const thinkingMessage = addMessage("Pensando…", "assistant");
+    thinkingMessage.querySelector("span:last-child").classList.add("thinking");
 
     try {
       const response = await fetch(BACKEND_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          message,
-          accessCode
-        })
+        body: JSON.stringify({ message, accessCode })
       });
 
       const data = await response.json();
@@ -241,4 +240,3 @@
 
 </body>
 </html>
-
