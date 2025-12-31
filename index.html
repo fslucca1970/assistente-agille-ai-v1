@@ -52,16 +52,20 @@
       color: rgb(109, 179, 63);
     }
 
-    textarea {
+    textarea, input {
       width: 100%;
-      height: 70px;
       padding: 8px;
       font-size: 14px;
       border-radius: 4px;
       border: 1px solid #ccc;
+      margin-bottom: 8px;
     }
 
-    textarea:focus {
+    textarea {
+      height: 70px;
+    }
+
+    textarea:focus, input:focus {
       outline: none;
       border-color: rgb(109, 179, 63);
       box-shadow: 0 0 0 2px rgba(109, 179, 63, 0.2);
@@ -92,39 +96,45 @@
       color: #666;
       margin-top: 10px;
     }
-
-    footer a {
-      color: rgb(0, 72, 18);
-      font-weight: bold;
-    }
   </style>
-
 </head>
 
 <body>
   <div class="container">
-     <h1>Assistente de Criação de Conteúdo com Inteligência Artificial AGILLE AI</h1>
+    <h1>Assistente de Criação de Conteúdo com Inteligência Artificial AGILLE AI</h1>
 
     <div class="chat-box" id="chatBox"></div>
 
-    <textarea id="userInput" placeholder="Ex: Crie um post para LinkedIn sobre liderança"></textarea>
+    <!-- NOVO CAMPO: CÓDIGO DE ACESSO -->
+    <input
+      type="text"
+      id="accessCode"
+      placeholder="Código de acesso"
+    />
+
+    <textarea
+      id="userInput"
+      placeholder="Ex: Crie um post para LinkedIn sobre liderança"
+    ></textarea>
+
     <button id="sendBtn">Enviar</button>
 
     <div class="hint">
-      Este assistente ajuda a criar conteúdo profissional para LinkedIn e Instagram.
+      Este assistente gera apenas textos. Uso restrito a usuários autorizados.
     </div>
   </div>
 
-<footer style="margin-top: 40px; text-align: center; font-size: 13px; color: #666;">
-  Desenvolvido com IA • 
-  <a href="https://www.agilleai.com" target="_blank" style="color: #0b5ed7; text-decoration: none;">
-    www.agilleai.com
-  </a>
-</footer>
+  <footer style="margin-top: 40px; text-align: center; font-size: 13px; color: #666;">
+    Desenvolvido com IA •
+    <a href="https://www.agilleai.com" target="_blank" style="color: #0b5ed7; text-decoration: none;">
+      www.agilleai.com
+    </a>
+  </footer>
 
 <script>
   const chatBox = document.getElementById("chatBox");
   const userInput = document.getElementById("userInput");
+  const accessCodeInput = document.getElementById("accessCode");
   const sendBtn = document.getElementById("sendBtn");
 
   const BACKEND_URL = "https://agille-ai-backend.onrender.com/chat";
@@ -136,7 +146,6 @@
     if (sender === "user") {
       div.innerHTML = `<span class="user">Você:</span> ${content}`;
     } else {
-      // Mostrar sempre como texto (sem tentar carregar imagens)
       div.innerHTML = `<span class="assistant">Assistente:</span> ${content}`;
     }
 
@@ -146,6 +155,13 @@
 
   async function sendMessage() {
     const message = userInput.value.trim();
+    const accessCode = accessCodeInput.value.trim();
+
+    if (!accessCode) {
+      alert("Informe o código de acesso.");
+      return;
+    }
+
     if (!message) return;
 
     addMessage(message, "user");
@@ -156,16 +172,14 @@
       const response = await fetch(BACKEND_URL, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
+        body: JSON.stringify({
+          message,
+          accessCode
+        })
       });
 
       const data = await response.json();
-
-      if (data.response) {
-        addMessage(data.response, "assistant");
-      }
-
-      // Ignorar data.image_url pois backend não gera imagem mais
+      addMessage(data.response || "Erro inesperado.", "assistant");
 
     } catch (error) {
       addMessage("Erro ao conectar com o assistente.", "assistant");
@@ -185,3 +199,4 @@
 
 </body>
 </html>
+
